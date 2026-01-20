@@ -98,3 +98,4 @@ validators==0.20.0
 wasabi==1.1.2
 Werkzeug==2.3.6
 zipp==3.16.2
+uvicorn==0.30.6
