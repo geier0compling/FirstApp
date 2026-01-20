@@ -1,0 +1,37 @@
+# --------------------
+# Python / runtime
+# --------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+
+# --------------------
+# Databases / caches
+# --------------------
+*.db
+*.sqlite
+translations.db
+translations/
+
+# --------------------
+# Large datasets
+# --------------------
+data/wiktionary/
+*.jsonl
+
+# --------------------
+# Secrets / credentials
+# --------------------
+.env
+gcp/
+gcp/*.json
+
+# --------------------
+# OS / editor junk
+# --------------------
+.DS_Store
+.idea/
+.vscode/
