@@ -1,6 +1,29 @@
 // Store flashcards globally for CSV export
 let currentFlashcards = [];
 
+// Generate random German text
+document.getElementById("btnRandomGerman").addEventListener("click", async () => {
+    console.log("Random German button clicked");
+
+    try {
+        const res = await fetch("/api/random-german");
+
+        if (!res.ok) {
+            const body = await res.text();
+            console.error("Random German error:", res.status, body);
+            alert("Server error: " + res.status);
+            return;
+        }
+
+        const data = await res.json();
+        document.getElementById("inputText").value = (data.text || "").trim();
+
+    } catch (err) {
+        console.error("Random German fetch failed:", err);
+        alert("Could not load random German text.");
+    }
+});
+
 // Handle "Generate Flashcards" button click
 document.getElementById("generateBtn").addEventListener("click", async () => {
     console.log("Generate button clicked");
@@ -17,9 +40,7 @@ document.getElementById("generateBtn").addEventListener("click", async () => {
     try {
         const response = await fetch("/api/flashcards", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ text: text })
         });
 
@@ -47,7 +68,7 @@ document.getElementById("generateBtn").addEventListener("click", async () => {
                 <div class="detail"><strong>Meaning:</strong> ${card.translation}</div>
                 <div class="detail"><strong>CEFR:</strong> ${card.cefr}</div>
                 <div class="detail">
-                    ${card.display_details ? card.display_details.replace(/\n/g, "<br>") : ""}
+                    ${card.display_details || ""}
                 </div>
                 <div class="detail"><strong>Example:</strong><br>${card.example_sentence || ""}</div>
             `;
@@ -67,7 +88,6 @@ document.getElementById("generateBtn").addEventListener("click", async () => {
     }
 });
 
-
 // Download CSV (Quizlet-ready)
 function downloadCSV() {
     console.log("Download CSV clicked");
@@ -79,35 +99,22 @@ function downloadCSV() {
     currentFlashcards.forEach(card => {
         let term = card.display_word || card.word;
 
-        // Noun plural formatting → "die Chance | die Chancen"
         if (card.pos === "NOUN" && card.plural) {
             term = `${term} | die ${card.plural}`;
         }
 
-        // Verb conjugations → "kämpfen (kämpft / kämpfte / gekämpft)"
         if (card.pos === "VERB" && card.conjugations) {
             const c = card.conjugations;
-            const parts = [
-                c["3sg"] || null,
-                c["preterite"] || null,
-                c["participle"] || null
-            ].filter(Boolean);
-
-            if (parts.length > 0) {
-                term = `${term} (${parts.join(" / ")})`;
-            }
+            const parts = [c["3sg"] || null, c["preterite"] || null, c["participle"] || null].filter(Boolean);
+            if (parts.length > 0) term = `${term} (${parts.join(" / ")})`;
         }
 
-        // Remove commas from English side only (safe for CSV)
-        const definition = card.translation.replace(/,/g, "");
-
-        // Remove commas from TERM completely (CSV safety)
+        const definition = (card.translation || "").replace(/,/g, "");
         term = term.replace(/,/g, "");
 
         csv += `${term},${definition}\n`;
     });
 
-    // Create CSV & trigger download
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
 
@@ -119,5 +126,4 @@ function downloadCSV() {
     URL.revokeObjectURL(url);
 }
 
-// Attach Download button behavior
 document.getElementById("downloadBtn").addEventListener("click", downloadCSV);

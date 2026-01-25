@@ -1,58 +1,115 @@
-body {
-    font-family: Arial, sans-serif;
-    background: #f0f2f5;
-    margin: 0;
-    padding: 0;
+:root{
+  --bg: #f5f8f6;
+  --ink: #1f2937;
+  --muted: #4b5563;
+  --border: rgba(31, 41, 55, 0.12);
+  --accent: #8fe3b6;         /* mint */
+  --panel: #e7f3ec;          /* soft green surface */
+  --white: #ffffff;
+  --shadow: 0 30px 80px rgba(31, 41, 55, 0.12);
 }
 
-.container {
-    width: 90%;
-    max-width: 900px;
-    margin: 30px auto;
-    background: white;
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+* { box-sizing: border-box; }
+
+body{
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+               Roboto, Helvetica, Arial, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  margin: 0;
+  padding: 0;
 }
 
-textarea {
-    width: 100%;
-    height: 150px;
-    padding: 12px;
-    font-size: 16px;
-    margin-top: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
+/* Your existing container becomes the “card” */
+.container{
+  width: 92%;
+  max-width: 900px;
+  margin: 70px auto;
+  background: var(--white);
+  padding: 28px;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
 }
 
-button {
-    margin-top: 20px;
-    padding: 12px 20px;
-    font-size: 18px;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
+h1{
+  margin: 0 0 14px;
+  font-size: 34px;
+  letter-spacing: -0.02em;
 }
 
-button:hover {
-    background: #005fcc;
+textarea{
+  width: 100%;
+  height: 160px;
+  padding: 14px 16px;
+  font-size: 16px;
+  margin-top: 10px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--ink);
+  outline: none;
+  resize: vertical;
 }
 
-.flashcard {
-    background: #ffffff;
-    border-left: 5px solid #007bff;
-    padding: 15px;
-    margin-top: 20px;
-    border-radius: 6px;
+textarea:focus{
+  border-color: rgba(143, 227, 182, 0.9);
+  box-shadow: 0 0 0 4px rgba(143, 227, 182, 0.25);
 }
 
-.flashcard h3 {
-    margin: 0;
+/* Buttons */
+button{
+  margin-top: 18px;
+  margin-right: 10px;
+  padding: 12px 18px;
+  font-size: 16px;
+  background: var(--accent);
+  color: var(--ink);
+  border: 1px solid rgba(31, 41, 55, 0.10);
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 650;
+
 }
 
-.detail {
-    margin-top: 8px;
-    color: #444;
+button:hover{
+  filter: brightness(0.97);
+}
+
+button:active{
+  transform: translateY(1px);
+}
+
+/* Flashcards */
+#flashcardContainer{
+  margin-top: 22px;
+}
+
+.flashcard{
+  background: var(--panel);
+  border-left: 5px solid var(--accent);
+  padding: 16px 18px;
+  margin-top: 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(31, 41, 55, 0.08);
+}
+
+.flashcard h3{
+  margin: 0 0 8px;
+  font-size: 22px;
+  letter-spacing: -0.01em;
+}
+
+.detail{
+  margin-top: 8px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.detail strong{
+  color: var(--ink);
+}
+
+#btnRandomGerman {
+  margin-bottom: 16px;
 }

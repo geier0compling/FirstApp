@@ -16,6 +16,8 @@ from core.cefr_loader import load_cefr_files
 from adapters.cache_sqlite import TranslationCache
 from services.translator_google import GoogleTranslator
 from core.wiktionary_loader import load_nouns_and_verbs_from_url
+import requests
+
 
 # ---------------------------
 # Load environment variables
@@ -26,6 +28,32 @@ load_dotenv()
 # Create FastAPI app
 # ---------------------------
 app = FastAPI(title="German Flashcard App")
+
+@app.get("/api/random-german")
+def random_german():
+    url = "https://de.wikipedia.org/api/rest_v1/page/random/summary"
+    headers = {
+        "User-Agent": "GermanFlashcardApp/1.0 (local dev)"
+    }
+
+    try:
+        r = requests.get(url, headers=headers, timeout=8)
+
+        # If Wikipedia blocks us, don't crash the app
+        if r.status_code != 200:
+            return {"text": "Ich lerne gerade Deutsch. Das ist ein Beispielsatz. Heute ist das Wetter schön."}
+
+        data = r.json()
+        text = (data.get("extract") or "").strip()
+
+        if not text:
+            text = "Ich lerne gerade Deutsch. Das ist ein Beispielsatz. Heute ist das Wetter schön."
+
+        return {"text": text}
+
+    except Exception:
+        # Any network/JSON issue: still return something usable
+        return {"text": "Ich lerne gerade Deutsch. Das ist ein Beispielsatz. Heute ist das Wetter schön."}
 
 # ---------------------------
 # CORS (safe for local dev)
